@@ -38,7 +38,7 @@ function validation(input, validationType) {
           i - (case-insensitive)
           (^[a-z]]$), they ensure that the entire string matches the specified pattern.
          */
-      }else if(!/^[a-z]+$/i.test(value)){      
+      }else if(!/^[a-zA-Z\s]+$/i.test(value)){      
         return `Input needs to be an string.`;
       } else if(value.length < 4){
         return `Input needs to be at least 5 characters.`;
