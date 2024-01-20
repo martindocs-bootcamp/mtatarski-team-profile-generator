@@ -13,16 +13,89 @@ const render = require("./src/page-template.js");
 
 // TODO: Write Code to gather information about the development team members, and render the HTML file.
 
-function promptManagerInput(msg, varType) {
+// Function to validate the inputs 
+function validation(input, validationType) {
+  let value;
+
+  switch (validationType) {
+    case 'email':       
+      value = input.trim();
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; 
+
+      if(value === ''){
+        return `Input cannot be empty.`;
+      }else if(!emailRegex.test(value)){
+        return `Input needs to be an valid email.`;
+      }
+    
+      break;
+    case 'string': 
+      value = input.trim();
+
+      if(value === ''){
+        return `Input cannot be empty.`;
+        /**
+          ^ - asserts the start of the string.
+          $ - asserts the end of the string.
+          [a-z] - matches one or more letters.
+          i - (case-insensitive)
+          (^[a-z]]$), they ensure that the entire string matches the specified pattern.
+         */
+      }else if(!/^[a-z]+$/i.test(value)){      
+        return `Input needs to be an string.`;
+      } else if(value.length < 4){
+        return `Input needs to be at least 5 characters.`;
+      }
+
+      break;
+    case 'id':   
+      value = parseInt(input); // returns NaN for non-numeric values
+      
+      if(value === '' || isNaN(value)){
+        return `Input needs to be a number.`;      
+      }else if(value < 1){
+        return `Input needs to be at least 1 number.`;
+      }          
+      break;
+
+    case 'officeNumber':
+      // value = parseInt(input);
+      value = input.trim();
+
+      if(value === '' || isNaN(value)){
+        return `Input needs to be a valid office number.`;      
+      }else if(value.length < 5){
+        return `Input needs to be at least 5 numbers.`;
+      }          
+      break;
+  }
+
+  return true;
+
+}
+
+// Function to get information about manager
+function promptManagerInput(msg, valueType) {
+  let promptMsg = msg;
+  let validationType = valueType;
+
+  // Handling for 'office' input
+  if (msg === 'office') {
+    promptMsg = 'office number';
+    validationType = 'officeNumber'; 
+  }
+
   return inquirer.prompt([
     {
       type: "input",
-      message:`What is the team manager\'s ${msg}?`,
-      name: varType,
+      message:`What is the team manager\'s ${promptMsg}?`,
+      name: msg,
+      validate: (input) => validation(input, validationType),
     }
   ]);
 }
 
+// Function to get information about the team members
 function promptTeamInput(team) {
   const teamType = team.toLowerCase();
 
@@ -30,31 +103,36 @@ function promptTeamInput(team) {
     {
       type: 'input',
       name: `name`,
-      message: `What is your ${teamType}'s name?`,      
+      message: `What is your ${teamType}'s name?`, 
+      validate: (input) => validation(input, 'string')     
     },
     {
       type: 'input',
       name: `id`,
       message: `What is your ${teamType}'s ID?`,
+      validate: (input) => validation(input, 'id') 
     },
     {
       type: 'input',
       name: `email`,
-      message: `What is your ${teamType}'s email`,      
+      message: `What is your ${teamType}'s email`, 
+      validate: (input) => validation(input, 'email')      
     },
     {
       type: 'input',
       name: `additionalDetails`,
       message: `What is your ${teamType}'s ${teamType === 'engineer' ? 'Github username' : 'school'}?`,
+      validate: (input) => validation(input, 'string') 
     }
 
   ]);
 }
 
+// Function to repeat question for team members
 async function promptRepeatInput() {
   const answers = {
-    engineer: [],
-    intern: [],
+    engineers: [],
+    interns: [],
   };
 
   let exitFlag = true;
@@ -73,32 +151,58 @@ async function promptRepeatInput() {
     switch(teamType) {
       case 'Engineer':
         const engineer = await promptTeamInput(teamType);
-        answers['engineer'].push(engineer);
+        answers['engineers'].push(engineer);
         break;
       case 'Intern':
         const intern = await promptTeamInput(teamType);
-        answers['intern'].push(intern);          
+        answers['interns'].push(intern);          
         break;
       case 'Exit':
         exitFlag = false;
         break;      
     }    
   }
-  return answers
+  return answers;
 }
 
+// Main function to ask questions
 console.log("Please build your team");
-
 async function askQuestions() {
   try {
     
     // Manager questions
-    const managerName = await promptManagerInput("name", "managerName");
-    const managerID = await promptManagerInput("id", "managerID");
-    const managerEmail = await promptManagerInput("email", "managerEmail");
-    const managerOfficeNumber = await promptManagerInput("office number", "managerOfficeNumber");
+    const managerName = await promptManagerInput("name", "string");
+    const managerID = await promptManagerInput("id", "id");
+    const managerEmail = await promptManagerInput("email", "email");
+    const managerOfficeNumber = await promptManagerInput("office", "number");
 
+    // Teams members questions
     const list = await promptRepeatInput();
+
+    // structure
+    // {
+    //   name: 'Martin',
+    //   id: '1',
+    //   email: 'martin@gmail.com',
+    //   office: '124324',
+    //   engineers: [
+    //     {
+    //       name: 'Magda',
+    //       id: '2',
+    //       email: 'magda@gmail.com',
+    //       additionalDetails: 'magdawo'
+    //     }
+    //   ],
+    //   interns: [
+    //     {
+    //       name: 'Adams',
+    //       id: '3',
+    //       email: 'adam@gmail.com',
+    //       additionalDetails: 'fsdfsfsfsdfs'
+    //     }
+    //   ]
+    // }
+
 
     const allAnswers = {
       ...managerName,
