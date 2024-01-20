@@ -10,9 +10,6 @@ const outputPath = path.join(OUTPUT_DIR, "team.html");
 
 const render = require("./src/page-template.js");
 
-
-// TODO: Write Code to gather information about the development team members, and render the HTML file.
-
 // Function to validate the inputs 
 function validation(input, validationType) {
   let value;
@@ -177,7 +174,27 @@ async function askQuestions() {
     const managerOfficeNumber = await promptManagerInput("office", "number");
 
     // Teams members questions
-    const list = await promptRepeatInput();
+    const team = await promptRepeatInput();
+    
+    // Manager object
+    const manager = new Manager(
+      managerName.name, 
+      managerID.id, 
+      managerEmail.email, 
+      managerOfficeNumber.office
+    );
+
+    // Engineers object
+    const engineers = team.engineers.map((engineer) => {
+      const{name, id, email, additionalDetails} = engineer;
+      return new Engineer(name, id, email, additionalDetails);
+    })
+
+    // Interns object
+    const inters = team.interns.map((intern) => {
+      const{name, id, email, additionalDetails} = intern;
+      return new Engineer(name, id, email, additionalDetails);
+    })
 
     // structure
     // {
@@ -204,15 +221,15 @@ async function askQuestions() {
     // }
 
 
-    const allAnswers = {
-      ...managerName,
-      ...managerID,
-      ...managerEmail,
-      ...managerOfficeNumber,
-      ...list,
-    }
+    // const allAnswers = {
+    //   ...managerName,
+    //   ...managerID,
+    //   ...managerEmail,
+    //   ...managerOfficeNumber,
+    //   ...list,
+    // }
 
-    console.log(allAnswers);
+    // console.log(allAnswers);
 
   }catch(error) {
     console.error('Error during question prompts:', error);
