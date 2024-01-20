@@ -13,7 +13,7 @@ const render = require("./src/page-template.js");
 
 // TODO: Write Code to gather information about the development team members, and render the HTML file.
 
-function promptInput(msg, varType) {
+function promptManagerInput(msg, varType) {
   return inquirer.prompt([
     {
       type: "input",
@@ -23,22 +23,89 @@ function promptInput(msg, varType) {
   ]);
 }
 
+function promptTeamInput(team) {
+  const teamType = team.toLowerCase();
+
+  return inquirer.prompt([
+    {
+      type: 'input',
+      name: `name`,
+      message: `What is your ${teamType}'s name?`,      
+    },
+    {
+      type: 'input',
+      name: `id`,
+      message: `What is your ${teamType}'s ID?`,
+    },
+    {
+      type: 'input',
+      name: `email`,
+      message: `What is your ${teamType}'s email`,      
+    },
+    {
+      type: 'input',
+      name: `additionalDetails`,
+      message: `What is your ${teamType}'s ${teamType === 'engineer' ? 'Github username' : 'school'}?`,
+    }
+
+  ]);
+}
+
+async function promptRepeatInput() {
+  const answers = {
+    engineer: [],
+    intern: [],
+  };
+
+  let exitFlag = true;
+
+  while (exitFlag) {
+    const options = await inquirer.prompt([
+      {
+        type: 'list',
+        name: 'teamMember',
+        message: 'Which type of team member would you like to add?',
+        choices: ["Engineer", "Intern", "Exit"],
+      }
+    ]);
+
+    const teamType = options.teamMember;
+    switch(teamType) {
+      case 'Engineer':
+        const engineer = await promptTeamInput(teamType);
+        answers['engineer'].push(engineer);
+        break;
+      case 'Intern':
+        const intern = await promptTeamInput(teamType);
+        answers['intern'].push(intern);          
+        break;
+      case 'Exit':
+        exitFlag = false;
+        break;      
+    }    
+  }
+  return answers
+}
+
 console.log("Please build your team");
 
 async function askQuestions() {
   try {
     
     // Manager questions
-    const managerName = await promptInput("name", "managerName");
-    const managerID = await promptInput("id", "managerID");
-    const managerEmail = await promptInput("email", "managerEmail");
-    const managerOfficeNumber = await promptInput("office number", "managerOfficeNumber");
+    const managerName = await promptManagerInput("name", "managerName");
+    const managerID = await promptManagerInput("id", "managerID");
+    const managerEmail = await promptManagerInput("email", "managerEmail");
+    const managerOfficeNumber = await promptManagerInput("office number", "managerOfficeNumber");
+
+    const list = await promptRepeatInput();
 
     const allAnswers = {
       ...managerName,
       ...managerID,
       ...managerEmail,
       ...managerOfficeNumber,
+      ...list,
     }
 
     console.log(allAnswers);
