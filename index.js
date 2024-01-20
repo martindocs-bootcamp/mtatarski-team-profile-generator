@@ -174,7 +174,7 @@ async function askQuestions() {
     const managerOfficeNumber = await promptManagerInput("office", "number");
 
     // Teams members questions
-    const team = await promptRepeatInput();
+    const getTeam = await promptRepeatInput();
     
     // Manager object
     const manager = new Manager(
@@ -185,51 +185,30 @@ async function askQuestions() {
     );
 
     // Engineers object
-    const engineers = team.engineers.map((engineer) => {
+    const engineers = getTeam.engineers.map((engineer) => {
       const{name, id, email, additionalDetails} = engineer;
       return new Engineer(name, id, email, additionalDetails);
-    })
+    });
 
     // Interns object
-    const inters = team.interns.map((intern) => {
+    const inters = getTeam.interns.map((intern) => {
       const{name, id, email, additionalDetails} = intern;
-      return new Engineer(name, id, email, additionalDetails);
-    })
+      return new Intern(name, id, email, additionalDetails);
+    });
 
-    // structure
-    // {
-    //   name: 'Martin',
-    //   id: '1',
-    //   email: 'martin@gmail.com',
-    //   office: '124324',
-    //   engineers: [
-    //     {
-    //       name: 'Magda',
-    //       id: '2',
-    //       email: 'magda@gmail.com',
-    //       additionalDetails: 'magdawo'
-    //     }
-    //   ],
-    //   interns: [
-    //     {
-    //       name: 'Adams',
-    //       id: '3',
-    //       email: 'adam@gmail.com',
-    //       additionalDetails: 'fsdfsfsfsdfs'
-    //     }
-    //   ]
-    // }
+    // Data for generating the team
+    const team = render([manager, ...engineers, ...inters])
+      
+    // Create the OUTPUT folder if it doesn't exist
+    if(!fs.existsSync(OUTPUT_DIR)){
+      fs.mkdirSync(OUTPUT_DIR);
+    }
 
+    // Generate the HTML file
+    fs.writeFileSync(outputPath, team);
 
-    // const allAnswers = {
-    //   ...managerName,
-    //   ...managerID,
-    //   ...managerEmail,
-    //   ...managerOfficeNumber,
-    //   ...list,
-    // }
-
-    // console.log(allAnswers);
+    console.log("Generating the team...");
+  
 
   }catch(error) {
     console.error('Error during question prompts:', error);
