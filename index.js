@@ -10,7 +10,7 @@ const outputPath = path.join(OUTPUT_DIR, "team.html");
 
 const render = require("./src/page-template.js");
 
-// Function to validate the inputs 
+// Function to validate the user inputs 
 function validation(input, validationType) {
   let value;
 
@@ -121,11 +121,10 @@ function promptTeamInput(team) {
       message: `What is your ${teamType}'s ${teamType === 'engineer' ? 'Github username' : 'school'}?`,
       validate: (input) => validation(input, 'string') 
     }
-
   ]);
 }
 
-// Function to repeat question for team members
+// Function to repeat questions for team members
 async function promptRepeatInput() {
   const answers = {
     engineers: [],
@@ -134,13 +133,14 @@ async function promptRepeatInput() {
 
   let exitFlag = true;
 
+  // Loop through the questions until user choose exit
   while (exitFlag) {
     const options = await inquirer.prompt([
       {
         type: 'list',
         name: 'teamMember',
         message: 'Which type of team member would you like to add?',
-        choices: ["Engineer", "Intern", "Exit"],
+        choices: ["Engineer", "Intern", "I don\'t want to add any more team members"],
       }
     ]);
 
@@ -154,7 +154,7 @@ async function promptRepeatInput() {
         const intern = await promptTeamInput(teamType);
         answers['interns'].push(intern);          
         break;
-      case 'Exit':
+      case 'I don\'t want to add any more team members':
         exitFlag = false;
         break;      
     }    
@@ -196,7 +196,7 @@ async function askQuestions() {
       return new Intern(name, id, email, additionalDetails);
     });
 
-    // Data for generating the team
+    // Data for generating the team members
     const team = render([manager, ...engineers, ...inters])
       
     // Create the OUTPUT folder if it doesn't exist
