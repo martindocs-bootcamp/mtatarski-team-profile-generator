@@ -9,7 +9,7 @@ The primary tools used include:
 - **Node.js (v19.4.0):** powers the Readme Generator, providing a robust JavaScript runtime for executing command-line operations efficiently. 
 
 ## Table of Contents
-- [Screenshot](#screenshot)
+- [Screenshots](#screenshots)
 - [Installation](#installation)
 - [How to Use](#how-to-use)
 - [Dependencies](#dependencies)
@@ -19,11 +19,16 @@ The primary tools used include:
 - [Questions](#questions)
 - [License](#license)
 
-## Screenshot
+## Screenshots
 
-![Team Profile Generator](./assets/images/team-profile-generator.png)
+![Team Profie Generator](./assets/images/team-profile-generator1.png)
 
-*The Profile Generator main screen.*
+*The Profile Generator command-line main screen.*
+
+![Generated HTML Page](./assets/images/team-profile-generator2.png)
+
+*The Generated HTML page main screen.*
+
 
 ## Installation
 
@@ -96,7 +101,7 @@ To run tests and check coverage, use:
 ```sh
 npm run test
 ```
-![Test Coverage](./assets/images/testing-coverage.png)
+![Test Coverage](./assets/images/test-coverage.png)
 
 ## Contributions
 
