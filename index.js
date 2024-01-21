@@ -4,11 +4,15 @@ const Intern = require("./lib/Intern.js");
 const inquirer = require("inquirer");
 const path = require("path");
 const fs = require("fs");
+const banner = require("./utils/banner.js");
+const clearScreen = require('./utils/clearScreen'); 
 
 const OUTPUT_DIR = path.resolve(__dirname, "output");
 const outputPath = path.join(OUTPUT_DIR, "team.html");
 
 const render = require("./src/page-template.js");
+
+clearScreen(); // Clear the console screen
 
 // Function to validate the user inputs 
 function validation(input, validationType) {
@@ -163,8 +167,11 @@ async function promptRepeatInput() {
 }
 
 // Main function to ask questions
-console.log("Please build your team");
 async function askQuestions() {
+  
+  banner(); // Show the banner
+  console.log("Please build your team");
+
   try {
     
     // Manager questions
