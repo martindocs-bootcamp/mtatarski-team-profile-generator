@@ -64,7 +64,7 @@ node index.js
 
 2. Follow the prompts to enter information for the team manager, engineers, and interns.
 3. Choose to add an engineer, add an intern, or finish building the team.
-4. Upon completion, the HTML file is generated in the `output` folder as team.html.
+4. Upon completion, the HTML file is generated in the `output` folder as `team.html`.
 
 ## Dependencies
 
@@ -81,14 +81,14 @@ npm install inquirer@6.3.1 commander@11.1.0 minimist@1.2.8
 
 The Team Profile Generator offers the following key features:
 
-- **Dynamic Profile Generation:** The application allows the user to dynamically generate profiles for team members, including managers, engineers, and interns.
+- **Dynamic Profile Generation:** The application allows the user to dynamically generate profiles for team members, including manager, engineers, and interns.
 - **Bootstrap Card Display:** The generated HTML showcases team members in Bootstrap cards, providing a visually appealing and organized presentation.
 - **Comprehensive Validation:** The application incorporates extensive validation to ensure that user inputs match the required formats. It restricts input types based on the specific information needed (e.g., only string values for names, proper email structures).
 - **Flexible Team Structure:** Users can add as many or as few team members as needed, with the ability to include both engineers and interns.
-- **HTML Output:** The final output is an HTML file (team.html) containing all the generated profiles, making it easy to share and view.
+- **HTML Output:** The final output is an HTML file (`team.html`) containing all the generated profiles, making it easy to share and view.
 
 ## Tests
-The application uses Jest for testing classes. All tests are located in the `_tests_` directory, and coverage reports are available.
+The application uses `Jest` for testing classes. All tests are located in the `_tests_` directory, and coverage reports are available.
 
 To run tests for the classes, use the following command:
 
